@@ -44,7 +44,7 @@ class App extends React.Component {
     this.setState({ memeUrl: instanceImageUrl })
   }
   handleClickNext = () => {
-    this.setState({ imageId: this.state.imageId + Math.random() })
+    this.setState({ imageId: this.state.imageId + 1 })
     this.fetchMemeImage()
   }
   handleClickPrevious = () => {
