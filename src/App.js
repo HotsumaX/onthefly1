@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import './App.css'
+import { Button } from 'grommet'
 
 const API_KEY = '6e630f7b-a0bb-41a9-ac2a-5b195704e848'
 
@@ -10,9 +11,10 @@ const constructApiCallUrl = (line1, line2, imageId) =>
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min)
   max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min + 1)) + min //The maximum is inclusive and the minimum is inclusive
+  return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+const incrementImageId = ({ imageId }) => ({ imageId: imageId + 1 })
 class App extends React.Component {
   state = {
     memeUrl: '',
@@ -21,14 +23,6 @@ class App extends React.Component {
     imageId: 30
   }
 
-  componentDidMount() {
-    this.fetchMemeImage()
-  }
-
-  handleSubmit = event => {
-    event.preventDefault()
-    this.fetchMemeImage()
-  }
   fetchMemeImage = async () => {
     const {
       data: {
@@ -43,13 +37,23 @@ class App extends React.Component {
     )
     this.setState({ memeUrl: instanceImageUrl })
   }
-  handleClickNext = () => {
-    this.setState({ imageId: this.state.imageId + 1 })
+  componentDidMount() {
     this.fetchMemeImage()
   }
-  handleClickPrevious = () => {
-    this.setState({ imageId: this.state.imageId - 1 })
+
+  handleSubmit = event => {
+    event.preventDefault()
     this.fetchMemeImage()
+  }
+  handleClickNext = () => {
+    //notice the difference of the function above and how we declare the state below
+    this.setState(incrementImageId, this.fetchMemeImage)
+  }
+  handleClickPrevious = () => {
+    this.setState(
+      ({ imageId }) => ({ imageId: imageId - 1 }),
+      this.fetchMemeImage
+    )
   }
 
   handleSurpriseMe = () => {
@@ -60,23 +64,29 @@ class App extends React.Component {
   render = () => (
     <div className="App">
       <header className="App-header">
-        <button onClick={this.handleClickPrevious}>previous</button>
-        <img src={this.state.memeUrl} className="App-logo" alt="logo" />
-        <button onClick={this.handleClickNext}>next</button>
-        <p>
-          <button onClick={this.handleSurpriseMe}>surprise me</button>
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          hi
-        </a>
+        <div className="firstDiv">
+          <Button
+            className="button"
+            label="previous"
+            onClick={this.handleClickPrevious}
+          />
+          <img
+            src={this.state.memeUrl}
+            className="App-logo"
+            alt={this.state.memeUrl}
+          />
+          <Button
+            className="button"
+            label="next"
+            onClick={this.handleClickNext}
+          />
+        </div>
+
+        <button onClick={this.handleSurpriseMe}>surprise me</button>
+
         <form>
           <label htmlFor="line1">
-            whatever bitch
+            Edit Line One
             <input
               name="line1"
               value={this.state.line1}
@@ -85,13 +95,16 @@ class App extends React.Component {
             />
           </label>
           <br />
+          Edit Line Two
           <input
             value={this.state.line2}
             placeholder="line 2"
             onChange={event => this.setState({ line2: event.target.value })}
           />
+          <br />
           <button onClick={this.handleSubmit}>submit</button>
         </form>
+        <p>the current image number {this.state.imageId}</p>
       </header>
     </div>
   )
