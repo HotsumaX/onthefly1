@@ -1,27 +1,27 @@
-import React from 'react'
-import axios from 'axios'
-import './App.css'
-import { Button } from 'grommet'
+import React from "react";
+import axios from "axios";
+import "./App.css";
+import { Button } from "grommet";
 
-const API_KEY = '6e630f7b-a0bb-41a9-ac2a-5b195704e848'
+const API_KEY = "6e630f7b-a0bb-41a9-ac2a-5b195704e848";
 
 const constructApiCallUrl = (line1, line2, imageId) =>
-  `http://version1.api.memegenerator.net//Instance_Create?languageCode=en&generatorID=45&imageID=${imageId}&text0=${line1}&text1=${line2}&apiKey=${API_KEY}`
+  `http://version1.api.memegenerator.net//Instance_Create?languageCode=en&generatorID=45&imageID=${imageId}&text0=${line1}&text1=${line2}&apiKey=${API_KEY}`;
 
 function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min)
-  max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min + 1)) + min
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const incrementImageId = ({ imageId }) => ({ imageId: imageId + 1 })
+const incrementImageId = ({ imageId }) => ({ imageId: imageId + 1 });
 class App extends React.Component {
   state = {
-    memeUrl: '',
-    line1: 'fancy pant',
-    line2: 'get lap dance',
+    memeUrl: "",
+    line1: "fancy pant",
+    line2: "get lap dance",
     imageId: 30
-  }
+  };
 
   fetchMemeImage = async () => {
     const {
@@ -34,32 +34,32 @@ class App extends React.Component {
         this.state.line2,
         this.state.imageId
       )
-    )
-    this.setState({ memeUrl: instanceImageUrl })
-  }
+    );
+    this.setState({ memeUrl: instanceImageUrl });
+  };
   componentDidMount() {
-    this.fetchMemeImage()
+    this.fetchMemeImage();
   }
 
   handleSubmit = event => {
-    event.preventDefault()
-    this.fetchMemeImage()
-  }
+    event.preventDefault();
+    this.fetchMemeImage();
+  };
   handleClickNext = () => {
     //notice the difference of the function above and how we declare the state below
-    this.setState(incrementImageId, this.fetchMemeImage)
-  }
+    this.setState(incrementImageId, this.fetchMemeImage);
+  };
   handleClickPrevious = () => {
     this.setState(
       ({ imageId }) => ({ imageId: imageId - 1 }),
       this.fetchMemeImage
-    )
-  }
+    );
+  };
 
   handleSurpriseMe = () => {
-    this.setState({ imageId: getRandomIntInclusive(1, 500) })
-    this.fetchMemeImage()
-  }
+    this.setState({ imageId: getRandomIntInclusive(1, 500) });
+    this.fetchMemeImage();
+  };
 
   render = () => (
     <div className="App">
@@ -107,7 +107,7 @@ class App extends React.Component {
         <p>the current image number {this.state.imageId}</p>
       </header>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
